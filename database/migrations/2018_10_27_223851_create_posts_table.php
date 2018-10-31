@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->char('title');
             $table->char('slug')->index();
             $table->text('content');
-            $table->char('featured_image');
+            $table->char('featured_image')->nullable();
             $table->dateTime('published_at');
             $table->softDeletesTz();
             $table->timestamps();
