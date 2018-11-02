@@ -15,7 +15,9 @@ class Post extends Model
     {
         parent::boot();
         static::creating(function ($post) {
-            $post->author_id = Auth::id();
+            if ( !$post->author_id ) {
+                $post->author_id = Auth::id();
+            }
         });
     }
 
