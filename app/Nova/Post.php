@@ -29,7 +29,7 @@ class Post extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'title';
 
     /**
      * The columns that should be searched.
@@ -40,6 +40,22 @@ class Post extends Resource
         'title',
         'slug',
     ];
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ( $request->user()->role == 'admin' ) {
+            return $query;
+        } else {
+            return $query->where( 'author_id', $request->user()->id );
+        }
+    }
 
     /**
      * Get the fields displayed by the resource.
@@ -55,7 +71,7 @@ class Post extends Resource
                 ->rules('required', 'max:80'),
             Text::make('Slug')
                 ->rules('required', 'alpha_dash', 'max:80')
-                ->creationRules('unique:slug'),
+                ->creationRules('unique:posts,slug'),
             Trix::make('Content')
                 ->rules('required'),
             Image::make('Featured Image')
@@ -69,7 +85,10 @@ class Post extends Resource
             Boolean::make('Published', function () {
                 return now()->gt($this->published_at);
             }),
-            BelongsTo::make('User', 'author'),
+            BelongsTo::make('User', 'author')
+                ->canSee(function ($request) {
+                    return $request->user()->role == 'admin';
+                }),
         ];
     }
 
