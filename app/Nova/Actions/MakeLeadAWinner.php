@@ -33,16 +33,12 @@ class MakeLeadAWinner extends Action implements ShouldQueue
     {
         foreach ($models as $model) {
             try {
-
-                // Generate a random access token for each preapproved fundraiser
-                sleep(1);
-
+                // Send email
                 Mail::to($model->email)->send(new CongratulateWinner($model));
 
                 // Mark lead as a winner
                 $model->is_winner = Carbon::now();
                 $model->save();
-                sleep(1);
 
             } catch (Exception $e) {
                 $this->markAsFailed($model, $e);
