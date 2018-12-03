@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 use Mail;
 use Carbon\Carbon;
+use Laravel\Nova\Fields\Text;
 use App\Mail\CongratulateWinner;
 
 class MakeLeadAWinner extends Action implements ShouldQueue
@@ -34,7 +35,7 @@ class MakeLeadAWinner extends Action implements ShouldQueue
         foreach ($models as $model) {
             try {
                 // Send email
-                Mail::to($model->email)->send(new CongratulateWinner($model));
+                Mail::to($model->email)->send(new CongratulateWinner($model, $fields->subject));
 
                 // Mark lead as a winner
                 $model->is_winner = Carbon::now();
@@ -53,6 +54,8 @@ class MakeLeadAWinner extends Action implements ShouldQueue
      */
     public function fields()
     {
-        return [];
+        return [
+            Text::make('Subject'),
+        ];
     }
 }

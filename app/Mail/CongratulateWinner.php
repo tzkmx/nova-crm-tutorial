@@ -15,16 +15,18 @@ class CongratulateWinner extends Mailable
 
     public $lead;
     public $actionUrl;
+    public $subject;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Lead $lead)
+    public function __construct(Lead $lead, $subject = 'Congratulations')
     {
         $this->lead = $lead;
         $this->actionUrl = 'https://action-to-controller-here';
+        $this->subject = $subject;
     }
 
     /**
@@ -34,6 +36,6 @@ class CongratulateWinner extends Mailable
      */
     public function build()
     {
-        return $this->markdown('email.congratulate-winner-content');
+        return $this->markdown('email.congratulate-winner-content')->subject($this->subject);
     }
 }
