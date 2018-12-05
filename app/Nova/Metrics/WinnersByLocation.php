@@ -21,7 +21,10 @@ class WinnersByLocation extends Partition
         $locations = Location::with('leads')->take(4)->get();
         $data = [];
         foreach ($locations as $location) {
-            $data[$location->name] = count($location->leads);
+            $data[$location->name] = $location
+                ->leads()
+                ->whereNotNull('is_winner')
+                ->count();
         }
         return $this->result($data);
     }

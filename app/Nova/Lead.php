@@ -67,7 +67,6 @@ class Lead extends Resource
         return [
             new Metrics\NewLeads,
             new Metrics\LeadsPerDay,
-            new Metrics\WinnersByLocation,
         ];
     }
 
