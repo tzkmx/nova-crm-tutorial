@@ -64,7 +64,11 @@ class Lead extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            new Metrics\NewLeads,
+            new Metrics\LeadsPerDay,
+            new Metrics\WinnersByLocation,
+        ];
     }
 
     /**
